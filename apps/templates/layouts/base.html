@@ -34,8 +34,6 @@
   <link href="/static/assets/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
   <link href="/static/assets/css/black-dashboard.css?v=1.0.0" rel="stylesheet" />
-  <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="/static/assets/demo/demo.css" rel="stylesheet" />
 
   <!-- Specific Page CSS goes HERE  -->
   {% block stylesheets %}{% endblock stylesheets %}
@@ -43,9 +41,7 @@
 </head>
 
 <body class="">
-  <div class="wrapper">
-
-    {% include 'includes/sidebar.html' %}
+  
 
     <div class="main-panel">
 
@@ -61,13 +57,11 @@
 
     </div>
     
-  </div>
+ 
 
   {% include 'includes/fixed-plugin.html' %}
 
   {% include 'includes/scripts.html' %}
-
-  {% include 'includes/scripts-sidebar.html' %}
 
   <!-- Specific Page JS goes HERE  -->
   {% block javascripts %}{% endblock javascripts %}

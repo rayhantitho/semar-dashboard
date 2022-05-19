@@ -1,0 +1,82 @@
+{% extends "layouts/base.html" %}
+
+{% block title %} Maps {% endblock %} 
+
+<!-- Specific Page CSS goes HERE  -->
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block content %}
+<h2>ARUS LAUT</h2>
+<form action="" method="post">{% csrf_token %}
+    {{ form.date_time_field }}
+    <input type="submit" value="Submit" />
+  </form>
+  <br>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css"></link>
+<link rel="stylesheet" href="/static/assets/css/leaflet-velocity.css"></link>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+<script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js"></script>
+<script src="/static/assets/js/plugins/leaflet-velocity.js"></script>
+<div id="map" style="width: 1500px; height: 900px; margin-left: -150px; margin-right: auto;"></div>
+<script type="text/javascript">
+
+function initDemoMap() {
+  var Esri_WorldImagery = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+	maxZoom: 19,
+	attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+});
+
+  // var Esri_DarkGreyCanvas = L.tileLayer(
+  //   "http://{s}.sm.mapstack.stamen.com/" +
+  //     "(toner-lite,$fff[difference],$fff[@23],$fff[hsl-saturation@20])/" +
+  //     "{z}/{x}/{y}.png",
+  //   {
+  //     attribution:
+  //       "Tiles &copy; Esri &mdash; Esri, DeLorme, NAVTEQ, TomTom, Intermap, iPC, USGS, FAO, " +
+  //       "NPS, NRCAN, GeoBase, Kadaster NL, Ordnance Survey, Esri Japan, METI, Esri China (Hong Kong), and the GIS User Community"
+  //   }
+  // );
+
+  var baseLayers = {
+    Satellite: Esri_WorldImagery
+  };
+
+  var map = L.map("map", {
+    layers: [Esri_WorldImagery]
+  });
+
+  var layerControl = L.control.layers(baseLayers);
+  layerControl.addTo(map);
+  map.setView([7, 107], 5);
+
+  return {
+    map: map,
+    layerControl: layerControl
+  };
+}
+
+// demo map
+var mapStuff = initDemoMap();
+var map = mapStuff.map;
+var layerControl = mapStuff.layerControl;
+
+// load data (u, v grids) from somewhere (e.g. https://github.com/danwild/wind-js-server)
+$.getJSON("current.json", function(data) {
+  var velocityLayer = L.velocityLayer({
+    displayValues: true,
+    displayOptions: {
+      velocityType: "GBR Wind",
+      position: "bottomleft",
+      emptyString: "No wind data",
+      showCardinal: true
+    },
+    data: data,
+    maxVelocity: 15
+  });
+
+  layerControl.addOverlay(velocityLayer, "Wind - Great Barrier Reef");
+});
+
+</script>
+
+{% endblock content %}
